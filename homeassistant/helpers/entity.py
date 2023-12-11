@@ -4,7 +4,6 @@ from __future__ import annotations
 from abc import ABC
 import asyncio
 from collections.abc import Coroutine, Iterable, Mapping, MutableMapping
-import dataclasses
 from datetime import timedelta
 from enum import Enum, auto
 import functools as ft
@@ -1245,8 +1244,7 @@ class Entity(ABC):
         )
 
 
-@dataclasses.dataclass(slots=True)
-class ToggleEntityDescription(EntityDescription):
+class ToggleEntityDescription(EntityDescription, frozen_or_thawed=True):
     """A class that describes toggle entities."""
 
 
