@@ -5,12 +5,16 @@ import asyncio
 from datetime import timedelta
 from typing import TYPE_CHECKING, Any, cast
 
-from homeassistant.components.cover import CoverEntity
+from homeassistant.components.cover import (
+    CoverDeviceClass,
+    CoverEntity,
+)
 from homeassistant.const import (
     CONF_COMMAND_CLOSE,
     CONF_COMMAND_OPEN,
     CONF_COMMAND_STATE,
     CONF_COMMAND_STOP,
+    CONF_DEVICE_CLASS,
     CONF_NAME,
     CONF_SCAN_INTERVAL,
     CONF_UNIQUE_ID,
@@ -43,6 +47,7 @@ async def async_setup_platform(
     entities: dict[str, Any] = {slugify(discovery_info[CONF_NAME]): discovery_info}
 
     for device_name, device_config in entities.items():
+        device_class: CoverDeviceClass | None = device_config.get(CONF_DEVICE_CLASS)
         value_template: Template | None = device_config.get(CONF_VALUE_TEMPLATE)
         if value_template is not None:
             value_template.hass = hass
@@ -50,6 +55,7 @@ async def async_setup_platform(
         trigger_entity_config = {
             CONF_UNIQUE_ID: device_config.get(CONF_UNIQUE_ID),
             CONF_NAME: Template(device_config.get(CONF_NAME, device_name), hass),
+            CONF_DEVICE_CLASS: device_class,
         }
 
         covers.append(
