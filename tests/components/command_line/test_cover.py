@@ -38,6 +38,8 @@ async def test_setup_integration_yaml(
     assert entity_state
     assert entity_state.state == STATE_ON
     assert entity_state.name == "Test"
+    assert entity_state.attributes.get("device_class") == "garage"
+    assert entity_state.attributes.get("icon") == "mdi:garage-open"
 
 
 @pytest.mark.parametrize(
@@ -48,10 +50,7 @@ async def test_setup_integration_yaml(
                 {
                     "cover": {
                         "name": "Test",
-                        "command": "echo 10",
-                        "payload_on": "1.0",
-                        "payload_off": "0",
-                        "value_template": "{{ value | multiply(0.1) }}",
+                        "command_state": "echo 100",
                         "device_class": "garage",
                         ),
                     }
