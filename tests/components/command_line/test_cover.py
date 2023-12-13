@@ -29,6 +29,38 @@ import homeassistant.util.dt as dt_util
 
 from tests.common import async_fire_time_changed
 
+async def test_setup_integration_yaml(
+    hass: HomeAssistant, load_yaml_integration: None
+) -> None:
+    """Test cover setup."""
+
+    entity_state = hass.states.get("cover.test")
+    assert entity_state
+    assert entity_state.state == STATE_ON
+    assert entity_state.name == "Test"
+
+
+@pytest.mark.parametrize(
+    "get_config",
+    [
+        {
+            "command_line": [
+                {
+                    "cover": {
+                        "name": "Test",
+                        "command": "echo 10",
+                        "payload_on": "1.0",
+                        "payload_off": "0",
+                        "value_template": "{{ value | multiply(0.1) }}",
+                        "device_class": "garage",
+                        ),
+                    }
+                }
+            ]
+        }
+    ],
+)
+    
 
 async def test_no_poll_when_cover_has_no_command_state(hass: HomeAssistant) -> None:
     """Test that the cover does not polls when there's no state command."""
